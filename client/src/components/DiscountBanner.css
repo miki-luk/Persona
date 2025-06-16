@@ -1,0 +1,36 @@
+/* client/src/components/DiscountBanner.css */
+
+.discount-banner-wrapper {
+    background: linear-gradient(45deg, #4a00e0, #8e2de2); /* Фиолетовый градиент */
+    color: white;
+    padding: 2.5rem 2rem;
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.banner-text .banner-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.banner-text .banner-subtitle {
+    font-size: 1.1rem;
+    margin: 0.5rem 0 0 0;
+    opacity: 0.9;
+}
+
+.banner-text .highlight {
+    font-weight: 800;
+    font-size: 1.2em;
+}
+
+.banner-action-btn {
+    font-weight: 600;
+    padding: 10px 25px;
+    border-radius: 8px;
+    color: #4a00e0;
+}

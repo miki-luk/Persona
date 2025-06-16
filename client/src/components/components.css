@@ -1,0 +1,76 @@
+.device-item-card {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border: 1px solid #e9ecef;
+    text-align: center; /* Центрируем текст на карточке */
+}
+
+.device-item-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card-img-top {
+    object-fit: contain;
+    height: 200px; /* Сделаем картинки чуть побольше */
+}
+
+.device-price {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-top: auto;
+    color: #212529; /* Сделаем цену более заметной */
+}
+
+/* --- НОВЫЕ СТИЛИ ДЛЯ ФИЛЬТРОВ --- */
+
+.filter-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #333;
+    text-transform: uppercase; /* Стиль как в магазинах */
+    letter-spacing: 0.5px;
+}
+
+/* Стили для фильтров по категориям (типам) */
+.type-bar .list-group-item {
+    padding: 10px 15px;
+    border: none; /* Убираем рамки для чистоты */
+    background-color: transparent;
+    transition: background-color 0.2s ease;
+    border-radius: 5px;
+}
+
+.type-bar .list-group-item:hover {
+    background-color: #e9ecef; /* Легкая подсветка при наведении */
+}
+
+.type-bar .list-group-item.active {
+    background-color: #000; /* Черный активный цвет - стильно */
+    color: white;
+    font-weight: 600;
+}
+
+/* Стили для фильтров по брендам (теперь это "пилюли") */
+.brand-bar .brand-pill {
+    padding: 6px 14px;
+    margin: 0 8px 8px 0;
+    border: 1px solid #ced4da;
+    border-radius: 20px; /* Круглые края */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+    user-select: none; /* Чтобы текст не выделялся при клике */
+}
+
+.brand-bar .brand-pill:hover {
+    background-color: #f1f1f1;
+    border-color: #adb5bd;
+}
+
+.brand-bar .brand-pill.active {
+    background-color: #000;
+    color: white;
+    border-color: #000;
+    font-weight: 500;
+}

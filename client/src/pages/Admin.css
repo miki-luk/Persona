@@ -1,0 +1,19 @@
+/* --- START OF FILE client/src/pages/Admin.css --- */
+.admin-dashboard {
+    background-color: #e9ecef;
+    min-height: calc(100vh - 56px); /* Высота минус шапка */
+}
+.stat-card {
+    border: none;
+    border-radius: 12px;
+}
+.stat-card .card-title {
+    font-size: 1rem;
+    color: #6c757d;
+}
+.stat-card .stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #212529;
+}
+/* --- END OF FILE client/src/pages/Admin.css --- */

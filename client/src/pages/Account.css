@@ -1,0 +1,58 @@
+/* --- START OF FILE client/src/pages/Account.css --- */
+.account-sidebar {
+    position: sticky;
+    top: 100px;
+}
+.account-sidebar h4 {
+    font-weight: 700;
+}
+.account-sidebar .list-unstyled li {
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.2s ease;
+}
+.account-sidebar .list-unstyled li:hover {
+    background-color: #f8f9fa;
+}
+.account-sidebar .list-unstyled li.active {
+    background-color: #000;
+    color: #fff;
+    font-weight: 600;
+}
+
+.order-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    font-weight: 500;
+}
+.status {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #fff;
+}
+.status-в-обработке {
+    background-color: #ffc107;
+    color: #000;
+}
+/* Добавьте другие статусы по аналогии */
+.status-доставлен {
+    background-color: #198754;
+}
+.status-отменен {
+    background-color: #dc3545;
+}
+
+.order-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.order-item-details {
+    margin-left: 15px;
+}
+/* --- END OF FILE client/src/pages/Account.css --- */
