@@ -1,7 +1,8 @@
 // --- START OF FILE server/controllers/deviceController.js ---
+
 const uuid = require('uuid');
 const path = require('path');
-const { Device, DeviceInfo, Rating, User } = require('../models/models');
+const { Device, DeviceInfo, Rating, User, Brand } = require('../models/models'); // <-- Добавьте Brand в импорт
 const ApiError = require('../error/ApiError');
 const sequelize = require('../db');
 const { Op } = require('sequelize');
@@ -10,31 +11,30 @@ class DeviceController {
     async create(req, res, next) {
         const t = await sequelize.transaction();
         try {
-            let { name, price, brandId, typeId, info } = req.body;
+            // Добавляем departmentId
+            let { name, price, brandId, typeId, departmentId, info } = req.body;
             
             const { img } = req.files;
-            // Убедимся, что img всегда массив для единообразной обработки
             const allImages = Array.isArray(img) ? img : [img];
 
             if (allImages.length === 0) {
                 return next(ApiError.badRequest('Необходимо загрузить хотя бы одно изображение.'));
             }
 
-            // Первое изображение становится главным
             const mainImage = allImages[0];
             const mainImageName = uuid.v4() + ".jpg";
             mainImage.mv(path.resolve(__dirname, '..', 'static', mainImageName));
 
-            const device = await Device.create({ name, price, brandId, typeId, img: mainImageName }, { transaction: t });
+            // Добавляем departmentId при создании
+            const device = await Device.create({ name, price, brandId, typeId, departmentId, img: mainImageName }, { transaction: t });
 
-            // Остальные изображения (если они есть) сохраняем в DeviceInfo
             if (allImages.length > 1) {
                 const additionalImages = allImages.slice(1);
                 for (const imageFile of additionalImages) {
                     const fileName = uuid.v4() + ".jpg";
                     imageFile.mv(path.resolve(__dirname, '..', 'static', fileName));
                     await DeviceInfo.create({
-                        title: 'image', // Специальный ключ для доп. картинок
+                        title: 'image',
                         description: fileName,
                         deviceId: device.id
                     }, { transaction: t });
@@ -63,14 +63,16 @@ class DeviceController {
     }
 
     async getAll(req, res) {
-        let { brandId, typeId, limit, page, name } = req.query;
+        // Добавляем departmentId
+        let { brandId, typeId, departmentId, limit, page, name } = req.query;
         page = page || 1;
-        limit = limit || 9;
+        limit = limit || 12;
         let offset = page * limit - limit;
         
         let where = {};
         if (brandId) where.brandId = brandId;
         if (typeId) where.typeId = typeId;
+        if (departmentId) where.departmentId = departmentId; // <-- Новая фильтрация
         if (name) {
             where.name = { [Op.iLike]: `%${name}%` }; 
         }
@@ -80,6 +82,7 @@ class DeviceController {
         return res.json(devices);
     }
 
+    // --- ↓↓↓ ИЗМЕНЕНИЯ ЗДЕСЬ ↓↓↓ ---
     async getOne(req, res) {
         const { id } = req.params;
         const device = await Device.findOne({
@@ -89,11 +92,13 @@ class DeviceController {
                 {
                     model: Rating,
                     include: [{ model: User, attributes: ['email'] }]
-                }
+                },
+                { model: Brand, attributes: ['name'] } // <-- ДОБАВЛЕНО: загружаем связанную модель Бренда
             ]
         });
         return res.json(device);
     }
+    // --- ↑↑↑ КОНЕЦ ИЗМЕНЕНИЙ ↑↑↑ ---
 
     async addRating(req, res, next) {
         try {
@@ -108,10 +113,13 @@ class DeviceController {
 
             await Rating.create({ rate, review, userId, deviceId: id });
 
-            const ratings = await Rating.findAll({ where: { deviceId: id } });
-            const totalRate = ratings.reduce((sum, r) => sum + r.rate, 0);
-            const averageRating = ratings.length > 0 ? totalRate / ratings.length : 0;
-
+            const result = await Rating.findOne({
+                where: { deviceId: id },
+                attributes: [[sequelize.fn('AVG', sequelize.col('rate')), 'averageRating']],
+                raw: true
+            });
+            const averageRating = result.averageRating ? parseFloat(result.averageRating).toFixed(1) : 0;
+            
             await Device.update({ rating: averageRating }, { where: { id } });
 
             return res.json({ message: 'Отзыв успешно добавлен' });

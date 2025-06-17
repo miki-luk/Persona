@@ -1,24 +1,29 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button, Container, Row, Col, Card, Spinner, Table } from "react-bootstrap";
 import CreateBrand from "../components/modals/CreateBrand";
 import CreateDevice from "../components/modals/CreateDevice";
 import CreateType from "../components/modals/CreateType";
+import CreateDepartment from "../components/modals/CreateDepartment"; // <-- ИМПОРТ
 import { fetchAllOrders } from '../http/orderAPI';
 import './Admin.css'; 
+
 const Admin = () => {
     const [brandVisible, setBrandVisible] = useState(false);
     const [typeVisible, setTypeVisible] = useState(false);
     const [deviceVisible, setDeviceVisible] = useState(false);
+    const [departmentVisible, setDepartmentVisible] = useState(false); // <-- НОВОЕ СОСТОЯНИЕ
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         fetchAllOrders()
             .then(data => setOrders(data))
             .finally(() => setLoading(false));
     }, []);
+
     const totalRevenue = orders.reduce((sum, order) => sum + order.totalPrice, 0);
     const totalOrders = orders.length;
+
     return (
         <Container fluid className="admin-dashboard p-4">
             <Row className="mb-4">
@@ -41,16 +46,14 @@ const Admin = () => {
                         </Card.Body>
                     </Card>
                 </Col>
-                <Col md={4}>
-                </Col>
             </Row>
 
-            {/* БЛОК С ДЕЙСТВИЯМИ */}
             <Row className="mb-4">
                 <Col>
                     <Card>
                         <Card.Header as="h5">Действия</Card.Header>
                         <Card.Body className="d-flex gap-3">
+                            <Button variant="dark" onClick={() => setDepartmentVisible(true)}>Добавить отдел</Button> {/* <-- НОВАЯ КНОПКА */}
                             <Button variant="dark" onClick={() => setTypeVisible(true)}>Добавить тип</Button>
                             <Button variant="dark" onClick={() => setBrandVisible(true)}>Добавить бренд</Button>
                             <Button variant="success" onClick={() => setDeviceVisible(true)}>Добавить одежду</Button>
@@ -58,6 +61,7 @@ const Admin = () => {
                     </Card>
                 </Col>
             </Row>
+            
             <Row>
                 <Col>
                     <Card>
@@ -92,6 +96,7 @@ const Admin = () => {
                 </Col>
             </Row>
 
+            <CreateDepartment show={departmentVisible} onHide={() => setDepartmentVisible(false)}/> {/* <-- НОВАЯ МОДАЛКА */}
             <CreateBrand show={brandVisible} onHide={() => setBrandVisible(false)}/>
             <CreateDevice show={deviceVisible} onHide={() => setDeviceVisible(false)}/>
             <CreateType show={typeVisible} onHide={() => setTypeVisible(false)}/>
@@ -100,4 +105,3 @@ const Admin = () => {
 };
 
 export default Admin;
-// --- END OF FILE client/src/pages/Admin.js ---

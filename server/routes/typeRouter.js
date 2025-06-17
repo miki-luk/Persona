@@ -1,5 +1,3 @@
-// server/routes/typeRouter.js
-
 const router = require('express').Router();
 const typeController = require('../controllers/typeController');
 const authMiddleware = require('../middleware/authMiddleware');

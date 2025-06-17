@@ -1,36 +1,55 @@
-/* client/src/components/DiscountBanner.css */
-
 .discount-banner-wrapper {
-    background: linear-gradient(45deg, #4a00e0, #8e2de2); /* Фиолетовый градиент */
+    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%); /* Фиолетово-синий градиент */
     color: white;
-    padding: 2.5rem 2rem;
-    border-radius: 12px;
+    padding: 2.5rem 3rem;
+    border-radius: 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    position: relative;
 }
 
-.banner-text .banner-title {
-    font-size: 1.8rem;
+/* Декоративная иконка слева */
+.banner-icon-area {
+    margin-right: 2rem;
+    opacity: 0.8;
+}
+
+/* Текстовый блок */
+.banner-text {
+    flex-grow: 1;
+}
+
+.banner-title {
+    font-size: 2rem;
     font-weight: 700;
     margin: 0;
+    line-height: 1.2;
 }
 
-.banner-text .banner-subtitle {
+.banner-subtitle {
     font-size: 1.1rem;
-    margin: 0.5rem 0 0 0;
+    margin: 0.25rem 0 0 0;
     opacity: 0.9;
 }
 
-.banner-text .highlight {
-    font-weight: 800;
-    font-size: 1.2em;
-}
-
+/* Кнопка */
 .banner-action-btn {
     font-weight: 600;
-    padding: 10px 25px;
+    padding: 12px 30px;
     border-radius: 8px;
-    color: #4a00e0;
+    color: #4a00e0; /* Цвет текста кнопки в тон градиенту */
+    background-color: #fff;
+    border: none;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    white-space: nowrap; /* Чтобы текст не переносился */
+}
+
+.banner-action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    color: #4a00e0; 
+    background-color: #fff;
 }

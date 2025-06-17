@@ -1,0 +1,26 @@
+.department-nav-wrapper {
+    background-color: #f8f9fa;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.department-nav-wrapper .nav-link {
+    color: #343a40;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 0.75rem 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.department-nav-wrapper .nav-link:hover {
+    color: #000;
+}
+
+.department-nav-wrapper .nav-link.active {
+    color: #000;
+    border-bottom-color: #000;
+}

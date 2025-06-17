@@ -1,7 +1,8 @@
+/* --- СТИЛИ ДЛЯ КАРТОЧЕК ТОВАРОВ --- */
 .device-item-card {
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
     border: 1px solid #e9ecef;
-    text-align: center; /* Центрируем текст на карточке */
+    text-align: center;
 }
 
 .device-item-card:hover {
@@ -11,66 +12,82 @@
 
 .card-img-top {
     object-fit: contain;
-    height: 200px; /* Сделаем картинки чуть побольше */
+    height: 200px;
 }
 
 .device-price {
     font-size: 1.2rem;
     font-weight: 600;
     margin-top: auto;
-    color: #212529; /* Сделаем цену более заметной */
+    color: #212529;
 }
 
-/* --- НОВЫЕ СТИЛИ ДЛЯ ФИЛЬТРОВ --- */
+/* --- СТИЛИ ДЛЯ ФИЛЬТРОВ --- */
+
+.filter-section {
+    margin-bottom: 2.5rem;
+}
 
 .filter-title {
     font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 15px;
-    color: #333;
-    text-transform: uppercase; /* Стиль как в магазинах */
+    font-weight: 700;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #f0f0f0;
+    text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
-/* Стили для фильтров по категориям (типам) */
-.type-bar .list-group-item {
-    padding: 10px 15px;
-    border: none; /* Убираем рамки для чистоты */
-    background-color: transparent;
-    transition: background-color 0.2s ease;
-    border-radius: 5px;
+/* Стили для списка категорий (TypeBar) */
+.category-list {
+    list-style: none;
+    padding-left: 0;
 }
 
-.type-bar .list-group-item:hover {
-    background-color: #e9ecef; /* Легкая подсветка при наведении */
+.category-list-item {
+    padding: 8px 0;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #495057;
+    transition: color 0.2s ease;
 }
 
-.type-bar .list-group-item.active {
-    background-color: #000; /* Черный активный цвет - стильно */
-    color: white;
-    font-weight: 600;
+.category-list-item:hover {
+    color: #000;
 }
 
-/* Стили для фильтров по брендам (теперь это "пилюли") */
-.brand-bar .brand-pill {
-    padding: 6px 14px;
-    margin: 0 8px 8px 0;
-    border: 1px solid #ced4da;
-    border-radius: 20px; /* Круглые края */
+.category-list-item.active {
+    color: #000;
+    font-weight: 700;
+}
+
+/* Стили для брендов в виде "пилюль" (BrandBar) */
+.brand-pills-container {
+    display: flex;
+    flex-wrap: wrap; /* <-- ИСПРАВЛЕНИЕ ЗДЕСЬ */
+    gap: 10px;
+}
+
+.brand-pill {
+    padding: 7px 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
     cursor: pointer;
     transition: all 0.2s ease;
     font-size: 0.9rem;
-    user-select: none; /* Чтобы текст не выделялся при клике */
+    user-select: none;
+    background-color: #f8f9fa;
 }
 
-.brand-bar .brand-pill:hover {
-    background-color: #f1f1f1;
-    border-color: #adb5bd;
+.brand-pill:hover {
+    border-color: #000;
+    color: #000;
 }
 
-.brand-bar .brand-pill.active {
+.brand-pill.active {
     background-color: #000;
     color: white;
     border-color: #000;
-    font-weight: 500;
+    font-weight: 600;
 }

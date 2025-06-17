@@ -1,5 +1,3 @@
-// server/routes/brandRouter.js
-
 const router = require('express').Router();
 const brandController = require('../controllers/brandController');
 const authMiddleware = require('../middleware/authMiddleware');

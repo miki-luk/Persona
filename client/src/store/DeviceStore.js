@@ -1,95 +1,65 @@
-// client/src/store/DeviceStore.js
-
 import { makeAutoObservable } from "mobx";
 
 export default class DeviceStore {
     constructor() {
+        this._departments = [];
         this._types = [];
         this._brands = [];
         this._devices = [];
+        this._selectedDepartment = {};
         this._selectedType = {};
         this._selectedBrand = {};
-        this._searchQuery = ""; // Свойство для хранения поискового запроса
+        this._searchQuery = "";
         this._page = 1;
         this._totalCount = 0;
-        this._limit = 9; // Лимит товаров на странице
+        this._limit = 12;
         makeAutoObservable(this);
     }
 
-    // --- Сеттеры (методы для изменения состояния) ---
+    setDepartments(departments) { this._departments = departments; }
+    setTypes(types) { this._types = types; }
+    setBrands(brands) { this._brands = brands; }
+    setDevices(devices) { this._devices = devices; }
 
-    setTypes(types) {
-        this._types = types;
+    setSelectedDepartment(department) {
+        if (this._selectedDepartment.id !== department.id) {
+            this.setPage(1);
+            this.setSelectedType({});
+            this.setSelectedBrand({});
+            this.setSearchQuery("");
+            this._selectedDepartment = department || {};
+            this._types = [];
+            this._brands = [];
+        }
     }
-
-    setBrands(brands) {
-        this._brands = brands;
-    }
-
-    setDevices(devices) {
-        this._devices = devices;
-    }
-
+    
     setSelectedType(type) {
-        this.setPage(1); // Сбрасываем страницу при смене типа
+        this.setPage(1);
         this._selectedType = type || {};
     }
 
     setSelectedBrand(brand) {
-        this.setPage(1); // Сбрасываем страницу при смене бренда
+        this.setPage(1);
         this._selectedBrand = brand || {};
     }
 
-    setPage(page) {
-        this._page = page;
-    }
-
-    setTotalCount(count) {
-        this._totalCount = count;
-    }
-
-    // --- НЕДОСТАЮЩИЙ МЕТОД, КОТОРЫЙ МЫ ДОБАВЛЯЕМ ---
+    setPage(page) { this._page = page; }
+    setTotalCount(count) { this._totalCount = count; }
+    
     setSearchQuery(query) {
-        this.setPage(1); // Сбрасываем на первую страницу при новом поиске
+        this.setPage(1);
         this._searchQuery = query;
     }
 
-    // --- Геттеры (методы для получения состояния) ---
-
-    get types() {
-        return this._types;
-    }
-
-    get brands() {
-        return this._brands;
-    }
-
-    get devices() {
-        return this._devices;
-    }
-
-    get selectedType() {
-        return this._selectedType;
-    }
-
-    get selectedBrand() {
-        return this._selectedBrand;
-    }
-
-    get totalCount() {
-        return this._totalCount;
-    }
-
-    get page() {
-        return this._page;
-    }
-
-    get limit() {
-        return this._limit;
-    }
-
-    // --- НЕДОСТАЮЩИЙ ГЕТТЕР, КОТОРЫЙ МЫ ДОБАВЛЯЕМ ---
-    get searchQuery() {
-        return this._searchQuery;
-    }
+    get departments() { return this._departments; }
+    get types() { return this._types; }
+    get brands() { return this._brands; }
+    get devices() { return this._devices; }
+    get selectedDepartment() { return this._selectedDepartment; }
+    get selectedType() { return this._selectedType; }
+    get selectedBrand() { return this._selectedBrand; }
+    get totalCount() { return this._totalCount; }
+    get page() { return this._page; }
+    get limit() { return this._limit; }
+    get searchQuery() { return this._searchQuery; }
 }

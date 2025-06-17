@@ -1,5 +1,3 @@
-// client/src/http/deviceAPI.js
-
 import { $authHost, $host } from "./index";
 
 export const createType = async (type) => {
@@ -7,8 +5,8 @@ export const createType = async (type) => {
     return data;
 }
 
-export const fetchTypes = async () => {
-    const { data } = await $host.get('api/type');
+export const fetchTypes = async (departmentId) => {
+    const { data } = await $host.get('api/type', { params: { departmentId } });
     return data;
 }
 
@@ -17,8 +15,8 @@ export const createBrand = async (brand) => {
     return data;
 }
 
-export const fetchBrands = async () => {
-    const { data } = await $host.get('api/brand');
+export const fetchBrands = async (departmentId) => {
+    const { data } = await $host.get('api/brand', { params: { departmentId } });
     return data;
 }
 
@@ -27,10 +25,10 @@ export const createDevice = async (device) => {
     return data;
 }
 
-export const fetchDevices = async (typeId, brandId, page, limit = 9, name) => {
+export const fetchDevices = async (departmentId, typeId, brandId, page, limit = 12, name) => {
     const { data } = await $host.get('api/device', {
         params: {
-            typeId, brandId, page, limit, name
+            departmentId, typeId, brandId, page, limit, name
         }
     });
     return data;
@@ -41,8 +39,17 @@ export const fetchOneDevice = async (id) => {
     return data;
 }
 
-// --- НОВАЯ ФУНКЦИЯ ---
 export const addRating = async (deviceId, rate, review) => {
     const { data } = await $authHost.post(`api/device/${deviceId}/rating`, { rate, review });
+    return data;
+}
+
+export const createDepartment = async (department) => {
+    const { data } = await $authHost.post('api/department', department);
+    return data;
+}
+
+export const fetchDepartments = async () => {
+    const { data } = await $host.get('api/department');
     return data;
 }

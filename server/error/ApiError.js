@@ -1,3 +1,5 @@
+// --- START OF FILE server/error/ApiError.js ---
+
 class ApiError extends Error{
     constructor(status, message) {
         super();
@@ -6,7 +8,8 @@ class ApiError extends Error{
     }
 
     static badRequest(message) {
-        return new ApiError(404, message)
+        // --- ↓↓↓ ИСПРАВЛЕНО С 404 НА 400 ↓↓↓ ---
+        return new ApiError(400, message)
     }
 
     static internal(message) {
@@ -19,3 +22,4 @@ class ApiError extends Error{
 }
 
 module.exports = ApiError
+// --- END OF FILE server/error/ApiError.js ---
