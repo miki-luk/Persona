@@ -1,17 +1,28 @@
 // --- START OF FILE server/controllers/deviceController.js ---
 
-const uuid = require('uuid');
-const path = require('path');
-const { Device, DeviceInfo, Rating, User, Brand } = require('../models/models'); // <-- Добавьте Brand в импорт
+// uuid и path больше не нужны
+const { Device, DeviceInfo, Rating, User, Brand } = require('../models/models');
 const ApiError = require('../error/ApiError');
 const sequelize = require('../db');
 const { Op } = require('sequelize');
+
+// --- НАЧАЛО БЛОКА CLOUDINARY ---
+const cloudinary = require('cloudinary').v2;
+
+// Конфигурируем Cloudinary (он сам возьмет переменные из process.env)
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+    secure: true
+});
+// --- КОНЕЦ БЛОКА CLOUDINARY ---
+
 
 class DeviceController {
     async create(req, res, next) {
         const t = await sequelize.transaction();
         try {
-            // Добавляем departmentId
             let { name, price, brandId, typeId, departmentId, info } = req.body;
             
             const { img } = req.files;
@@ -21,25 +32,32 @@ class DeviceController {
                 return next(ApiError.badRequest('Необходимо загрузить хотя бы одно изображение.'));
             }
 
-            const mainImage = allImages[0];
-            const mainImageName = uuid.v4() + ".jpg";
-            mainImage.mv(path.resolve(__dirname, '..', 'static', mainImageName));
+            // --- НАЧАЛО ИЗМЕНЕННОЙ ЛОГИКИ ЗАГРУЗКИ ---
+            // Загружаем главное изображение в Cloudinary
+            const mainImageUpload = await cloudinary.uploader.upload(allImages[0].tempFilePath, {
+                folder: 'persona_shop' // Имя папки в Cloudinary
+            });
+            const mainImageUrl = mainImageUpload.secure_url; // Получаем https ссылку
 
-            // Добавляем departmentId при создании
-            const device = await Device.create({ name, price, brandId, typeId, departmentId, img: mainImageName }, { transaction: t });
+            // Создаем товар с ПОЛНЫМ URL из Cloudinary
+            const device = await Device.create({ name, price, brandId, typeId, departmentId, img: mainImageUrl }, { transaction: t });
 
+            // Загружаем дополнительные изображения, если они есть
             if (allImages.length > 1) {
                 const additionalImages = allImages.slice(1);
                 for (const imageFile of additionalImages) {
-                    const fileName = uuid.v4() + ".jpg";
-                    imageFile.mv(path.resolve(__dirname, '..', 'static', fileName));
+                    const additionalImageUpload = await cloudinary.uploader.upload(imageFile.tempFilePath, {
+                         folder: 'persona_shop'
+                    });
+                    // Сохраняем ПОЛНЫЙ URL доп. изображения в DeviceInfo
                     await DeviceInfo.create({
                         title: 'image',
-                        description: fileName,
+                        description: additionalImageUpload.secure_url,
                         deviceId: device.id
                     }, { transaction: t });
                 }
             }
+            // --- КОНЕЦ ИЗМЕНЕННОЙ ЛОГИКИ ЗАГРУЗКИ ---
 
             if (info) {
                 const parsedInfo = JSON.parse(info);
@@ -63,7 +81,6 @@ class DeviceController {
     }
 
     async getAll(req, res) {
-        // Добавляем departmentId
         let { brandId, typeId, departmentId, limit, page, name } = req.query;
         page = page || 1;
         limit = limit || 12;
@@ -72,7 +89,7 @@ class DeviceController {
         let where = {};
         if (brandId) where.brandId = brandId;
         if (typeId) where.typeId = typeId;
-        if (departmentId) where.departmentId = departmentId; // <-- Новая фильтрация
+        if (departmentId) where.departmentId = departmentId;
         if (name) {
             where.name = { [Op.iLike]: `%${name}%` }; 
         }
@@ -82,7 +99,6 @@ class DeviceController {
         return res.json(devices);
     }
 
-    // --- ↓↓↓ ИЗМЕНЕНИЯ ЗДЕСЬ ↓↓↓ ---
     async getOne(req, res) {
         const { id } = req.params;
         const device = await Device.findOne({
@@ -93,12 +109,11 @@ class DeviceController {
                     model: Rating,
                     include: [{ model: User, attributes: ['email'] }]
                 },
-                { model: Brand, attributes: ['name'] } // <-- ДОБАВЛЕНО: загружаем связанную модель Бренда
+                { model: Brand, attributes: ['name'] }
             ]
         });
         return res.json(device);
     }
-    // --- ↑↑↑ КОНЕЦ ИЗМЕНЕНИЙ ↑↑↑ ---
 
     async addRating(req, res, next) {
         try {

@@ -26,7 +26,7 @@ const DevicePage = observer(() => {
         fetchOneDevice(id).then(data => {
             if (data) {
                 setDevice(data);
-                setMainImage(process.env.REACT_APP_API_URL + data.img);
+                setMainImage(data.img); // ИЗМЕНЕНИЕ
             }
         }).finally(() => setLoading(false));
     };
@@ -68,23 +68,23 @@ const DevicePage = observer(() => {
 
     const specs = device.info.filter(i => i.title.toLowerCase() !== 'sizes' && i.title.toLowerCase() !== 'image');
     const sizes = device.info.find(i => i.title.toLowerCase() === 'sizes')?.description.split(',').map(s => s.trim()) || [];
+    // Теперь 'description' тоже содержит полный URL
     const images = [device.img, ...device.info.filter(i => i.title.toLowerCase() === 'image').map(i => i.description)];
     const averageRating = device.ratings?.length > 0 ? (device.ratings.reduce((sum, r) => sum + r.rate, 0) / device.ratings.length).toFixed(1) : '0';
 
     return (
         <Container className="product-page-container">
             <Row>
-                {/* КОЛОНКА С ГАЛЕРЕЕЙ */}
                 <Col md={7}>
                     <div className="product-gallery">
                         <div className="thumbnails-column">
                             {images.map((img, index) => (
                                 <img 
                                     key={index} 
-                                    src={process.env.REACT_APP_API_URL + img}
+                                    src={img} // ИЗМЕНЕНИЕ
                                     alt={`Thumbnail ${index + 1}`}
-                                    className={`thumbnail-image ${mainImage.includes(img) ? 'active' : ''}`}
-                                    onMouseEnter={() => setMainImage(process.env.REACT_APP_API_URL + img)} />
+                                    className={`thumbnail-image ${mainImage === img ? 'active' : ''}`} // ИЗМЕНЕНИЕ
+                                    onMouseEnter={() => setMainImage(img)} /> // ИЗМЕНЕНИЕ
                             ))}
                         </div>
                         <div className="main-image-wrapper">
@@ -92,8 +92,6 @@ const DevicePage = observer(() => {
                         </div>
                     </div>
                 </Col>
-
-                {/* КОЛОНКА С ИНФОРМАЦИЕЙ И ПОКУПКОЙ */}
                 <Col md={5} className="product-details">
                     <h2 className="brand-name">
                         {device.brand?.name || 'Бренд'} / <span className="product-name">{device.name}</span>
@@ -132,7 +130,6 @@ const DevicePage = observer(() => {
                 </Col>
             </Row>
 
-            {/* АККОРДЕОН С ОПИСАНИЕМ И ОТЗЫВАМИ */}
             <Accordion defaultActiveKey={['0']} alwaysOpen className="details-accordion">
                 <Accordion.Item eventKey="0">
                     <Accordion.Header>Описание и характеристики</Accordion.Header>
@@ -154,7 +151,6 @@ const DevicePage = observer(() => {
                 <Accordion.Item eventKey="1" id="reviews">
                     <Accordion.Header>Отзывы ({device.ratings?.length || 0})</Accordion.Header>
                     <Accordion.Body>
-                        {/* --- ВОЗВРАЩАЕМ ФОРМУ И СПИСОК ОТЗЫВОВ --- */}
                         {user.isAuth && (
                             <Card className="p-3 my-4 bg-light border-0">
                                 <h5>Оставить отзыв</h5>
@@ -184,7 +180,6 @@ const DevicePage = observer(() => {
                                 {r.review && <p className="mb-0 mt-2">{r.review}</p>}
                             </div>
                         )) : <p className="text-muted mt-3">Отзывов пока нет. Будьте первым!</p>}
-                        {/* --- КОНЕЦ ВОЗВРАЩЕНИЯ --- */}
                     </Accordion.Body>
                 </Accordion.Item>
             </Accordion>

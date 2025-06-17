@@ -3,18 +3,18 @@ require('dotenv').config()
 const express = require('express')
 const sequelize = require('./db')
 const models = require('./models/models')
-const router = require('./routes/index')
+const router =require('./routes/index')
 const errorHandler = require('./middleware/ErrorHandlingMiddleware')
 const PORT = process.env.PORT || 5000
 const cors = require('cors')
 const fileUpload = require('express-fileupload')
 const app = express()
-const path = require('path')
+const path = require('path') // Этот импорт больше не нужен, но можно оставить
 
 app.use(cors())
 app.use(express.json())
-app.use(express.static(path.resolve(__dirname, 'static')))
-app.use(fileUpload({}))
+// СТРОКА УДАЛЕНА: app.use(express.static(path.resolve(__dirname, 'static')))
+app.use(fileUpload({ useTempFiles: true })) // ИЗМЕНЕНИЕ: добавлена опция для работы с Cloudinary
 app.use('/api', router)
 // Middleware обработки ошибок должен быть последним
 app.use(errorHandler)

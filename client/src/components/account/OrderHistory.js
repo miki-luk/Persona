@@ -37,7 +37,7 @@ const OrderHistory = observer(() => {
                                 <h5>Состав заказа:</h5>
                                 {order.items.map(item => (
                                     <div key={item.id} className="order-item">
-                                        <Image src={process.env.REACT_APP_API_URL + item.device.img} thumbnail width={60} />
+                                        <Image src={item.device.img} thumbnail width={60} />
                                         <div className="order-item-details">
                                             <div>{item.device.name}</div>
                                             <div className="text-muted">{item.quantity} шт. x {new Intl.NumberFormat('ru-RU').format(item.price)} ₽</div>

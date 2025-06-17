@@ -1,5 +1,5 @@
 // --- START OF FILE client/src/pages/Basket.js ---
-import React, { useContext, useState } from 'react'; // Убрали useEffect
+import React, { useContext, useState } from 'react';
 import { Context } from "../index";
 import { observer } from "mobx-react-lite";
 import { Container, Row, Col, Card, Button, Image, Form } from "react-bootstrap";
@@ -8,11 +8,9 @@ import { useNavigate } from "react-router-dom";
 import { SHOP_ROUTE, CHECKOUT_ROUTE } from "../utils/consts";
 
 const Basket = observer(() => {
-    const { basket } = useContext(Context); // Убрали user
+    const { basket } = useContext(Context);
     const navigate = useNavigate();
     const [debounceTimers, setDebounceTimers] = useState({});
-
-    // useEffect для загрузки корзины больше не нужен, App.js этим занимается
 
     const handleRemove = (deviceId) => {
         removeFromBasket(deviceId).then(() => {
@@ -52,7 +50,7 @@ const Basket = observer(() => {
                     {basket.basketDevices.map(item =>
                         item.device && (
                             <Card key={item.id} className="mb-3 d-flex flex-row p-3 align-items-center">
-                                <Image src={process.env.REACT_APP_API_URL + item.device.img} style={{ width: 100, height: 100, objectFit: 'contain' }} alt={item.device.name} />
+                                <Image src={item.device.img} style={{ width: 100, height: 100, objectFit: 'contain' }} alt={item.device.name} />
                                 <div className="ms-4 flex-grow-1">
                                     <h5>{item.device.name}</h5>
                                     <div style={{fontWeight: 600}}>{new Intl.NumberFormat('ru-RU').format(item.device.price)} руб.</div>

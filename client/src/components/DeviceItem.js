@@ -6,12 +6,12 @@ import { DEVICE_ROUTE } from "../utils/consts";
 import { observer } from "mobx-react-lite";
 import { Context } from "../index";
 import { addToBasket } from "../http/basketAPI";
-import { toggleFavorite } from "../http/favoriteAPI"; // <-- ИМПОРТ
-import { BagPlus, Heart, HeartFill } from 'react-bootstrap-icons'; // <-- ИМПОРТ
+import { toggleFavorite } from "../http/favoriteAPI";
+import { BagPlus, Heart, HeartFill } from 'react-bootstrap-icons';
 
 const DeviceItem = observer(({ device }) => {
     const navigate = useNavigate();
-    const { user, basket, favorite } = useContext(Context); // <-- Добавлен favorite
+    const { user, basket, favorite } = useContext(Context);
 
     const handleAddToCart = (e) => {
         e.stopPropagation();
@@ -20,7 +20,7 @@ const DeviceItem = observer(({ device }) => {
             return;
         }
         addToBasket(device.id).then((newItem) => {
-            basket.addDevice(newItem); // Оптимистичное добавление в стор
+            basket.addDevice(newItem);
             alert(`Товар "${device.name}" добавлен в корзину!`);
         }).catch(error => {
             alert(error.response?.data?.message || 'Ошибка добавления товара');
@@ -53,7 +53,7 @@ const DeviceItem = observer(({ device }) => {
                         <Card.Img
                             variant="top"
                             className="card-img-top"
-                            src={process.env.REACT_APP_API_URL + device.img}
+                            src={device.img}
                         />
                     </div>
                     <Card.Body>
